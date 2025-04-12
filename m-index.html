@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GhinescuTrade</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #fff0f5;
+      text-align: center;
+      color: #333;
+    }
+
+    /* Ecranul de intro */
+    #introScreen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #fff0f5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #introScreen img {
+      width: 150px;
+      height: auto;
+      margin-top: 50px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    #introScreen h2 {
+      margin-top: 20px;
+      color: #ff1493;
+      font-size: 1.5em;
+      animation: fadeInOut 5s ease-in-out forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Aplicația principală */
+    #app {
+      display: none;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #ff1493;
+      text-shadow: 2px 2px #ff69b4;
+    }
+
+    .info {
+      margin: 20px;
+      font-size: 1.2em;
+    }
+
+    button {
+      background-color: #ffcc00;
+      border: 3px solid #ff9900;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 1.2em;
+      margin: 10px;
+      cursor: pointer;
+      box-shadow: 3px 3px #d48d00;
+      transition: transform 0.2s;
+      width: 100%;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    .market {
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
+
+    .emoji {
+      font-size: 2em;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 1em;
+      color: #888;
+    }
+
+    /* Media Queries pentru mobil */
+    @media only screen and (max-width: 600px) {
+      #introScreen img {
+        width: 120px;
+      }
+
+      #introScreen h2 {
+        font-size: 1.2em;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .info {
+        font-size: 1em;
+      }
+
+      .market {
+        font-size: 1.2em;
+      }
+
+      button {
+        font-size: 1.1em;
+        padding: 10px;
+      }
+
+      .footer {
+        font-size: 0.9em;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Ecran de intro -->
+  <div id="introScreen">
+    <img src="intro.png" alt="Copil cu aplicație de tranzacționare">
+    <h2>Bine ai venit pe GhinescuTrade!</h2>
+  </div>
+
+  <!-- Aplicația -->
+  <div id="app">
+    <h1>💰 Mini Tranzacționator 💰</h1>
+
+    <div class="info">
+      💼 Balanță: <span id="balance">1000</span> RON<br>
+      📦 Acțiuni deținute: <span id="stocks">0</span><br>
+      📉 Prețul unei acțiuni: <span id="price">100</span> RON
+    </div>
+
+    <button onclick="buyStock()">🛒 CUMPĂRĂ</button>
+    <button onclick="sellStock()">💸 VINDE</button>
+
+    <div class="market">
+      📈 Piața se mișcă: <span class="emoji" id="marketEmoji">🔄</span>
+    </div>
+
+    <div class="footer">
+      Fă-ți strategia și învață cum funcționează piața! 🎓
+    </div>
+  </div>
+
+  <script>
+    // Afișează aplicația după 5 secunde
+    setTimeout(() => {
+      document.getElementById("introScreen").style.display = "none";
+      document.getElementById("app").style.display = "block";
+    }, 5000);
+
+    // Logica aplicației
+    let balance = 1000;
+    let stocks = 0;
+    let price = 100;
+    let priceChange = 0;
+
+    function updateUI() {
+      document.getElementById('balance').textContent = balance.toFixed(2);
+      document.getElementById('stocks').textContent = stocks;
+      document.getElementById('price').textContent = price.toFixed(2);
+      const emoji = priceChange > 0 ? "📈" : priceChange < 0 ? "📉" : "🔄";
+      document.getElementById('marketEmoji').textContent = emoji;
+    }
+
+    function buyStock() {
+      if (balance >= price) {
+        balance -= price;
+        stocks += 1;
+        changePrice();
+        updateUI();
+      } else {
+        alert("Nu ai destui bani pentru a cumpăra!");
+      }
+    }
+
+    function sellStock() {
+      if (stocks > 0) {
+        balance += price;
+        stocks -= 1;
+        changePrice();
+        updateUI();
+      } else {
+        alert("Nu ai acțiuni de vândut!");
+      }
+    }
+
+    function changePrice() {
+      priceChange = (Math.random() * 20 - 10);
+      price += priceChange;
+      if (price < 10) price = 10;
+    }
+
+    setInterval(() => {
+      changePrice();
+      updateUI();
+    }, 5000);
+
+    updateUI();
+  </script>
+</body>
+</html>
